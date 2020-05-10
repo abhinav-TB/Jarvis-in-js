@@ -21,7 +21,20 @@ bot.onText(/\/pdf (.+)/, (msg, match) => {
 // messages.
 bot.on('message', (msg) => {
   const chatId = msg.chat.id;
- 
+   pdf('corona')
   // send a message to the chat acknowledging receipt of their message
   bot.sendMessage(chatId, 'Received your message');
 });
+
+
+const pdf=async (item) => {
+    const browser = await puppeteer.launch({headless: false});
+    const page = await browser.newPage();
+    await page.goto('https://www.wikipedia.org/');
+    await page.type('input[name=search]', item, {delay: 20})
+    await page.click('[class="sprite svg-search-icon"]')
+    await page.screenshot({path: 'example.png'});
+    await page.pdf({path: `${item}.pdf`, format: 'A4'});
+   
+    await browser.close();
+  };
